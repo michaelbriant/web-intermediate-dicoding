@@ -142,7 +142,7 @@ class HomePage extends HTMLElement {
     
     storyItem.innerHTML = `
       <img src="${story.photoUrl}" alt="Foto oleh ${story.name}">
-      <h4>${story.name}</h4>
+      <h3>${story.name}</h3>
       <p>${story.description.substring(0, 100)}...</p>
       <small>${new Date(story.createdAt).toLocaleString()}</small>
     `;

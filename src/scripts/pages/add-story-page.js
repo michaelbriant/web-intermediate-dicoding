@@ -1,5 +1,7 @@
 import StoryApi from '../data/api.js';
 import * as L from 'leaflet';
+import StoryDb from '../utils/indexeddb-helper.js';
+import { registerBackgroundSync } from '../utils/sw-register.js';
 
 class AddStoryPage extends HTMLElement {
   constructor() {
@@ -250,22 +252,20 @@ class AddStoryPage extends HTMLElement {
     const lat = this.querySelector('#lat').value;
     const lon = this.querySelector('#lon').value;
 
+    let photoFile;
+    if (this.photoBlob) {
+      photoFile = new File([this.photoBlob], "camera.jpg", { type: "image/jpeg" });
+    } else {
+      photoFile = photoInput.files[0];
+    }
+
     try {
       if (!lat || !lon) {
         throw new Error('Harap pilih lokasi di peta terlebih dahulu.');
       }
-      
-      let photoFile;
-      if (this.photoBlob) {
-        photoFile = new File([this.photoBlob], "camera.jpg", { type: "image/jpeg" });
-      } else {
-        photoFile = photoInput.files[0];
-      }
-      
       if (!photoFile) {
         throw new Error('Harap pilih foto untuk diunggah (dari file atau kamera).');
       }
-      
       if (photoFile.size > 1000000) {
         throw new Error('Ukuran foto tidak boleh lebih dari 1MB.');
       }
@@ -283,7 +283,24 @@ class AddStoryPage extends HTMLElement {
       window.location.hash = '#/';
 
     } catch (error) {
-      alert(`Gagal: ${error.message}`);
+      if (error.message.includes('fetch')) {
+        alert('Anda sedang offline. Postingan akan diunggah otomatis saat kembali online.');
+        
+        const storyData = {
+          photo: photoFile,
+          description: description,
+          lat: lat,
+          lon: lon,
+          token: localStorage.getItem('authToken'),
+        };
+        
+        await StoryDb.addStoryToOutbox(storyData);
+        await registerBackgroundSync();
+        window.location.hash = '#/';
+        
+      } else {
+        alert(`Gagal: ${error.message}`);
+      }
     } finally {
       submitButton.disabled = false;
       submitButton.textContent = 'Upload Story';

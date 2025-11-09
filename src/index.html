@@ -4,12 +4,16 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="./images/favicon.png">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#3498db">
+    <link rel="apple-touch-icon" href="/images/icons/icon-192x192.png">
+    
     <title>Dicoding Berbagi Cerita</title>
   </head>
   <body>
-    <a href="#main-content" class="skip-link">Skip to Content</a>
-
     <header>
+      <a href="#" class="skip-link">Skip to Content</a>
+    
       <div class="main-header container">
         <h1><a class="brand-name" href="#/">Berbagi Cerita Bersama Teman Dicoding</a></h1>
 
@@ -20,6 +24,12 @@
             <li class="nav-guest"><a href="#/login">Login</a></li>
             <li class="nav-guest"><a href="#/register">Register</a></li>
             <li class="nav-auth"><a href="#" id="logout-button">Logout</a></li>
+            <li class="nav-auth">
+              <div class="notification-toggle">
+                <label for="notif-toggle">Notifikasi:</label>
+                <input type="checkbox" id="notif-toggle">
+              </div>
+            </li>
           </ul>
         </nav>
 

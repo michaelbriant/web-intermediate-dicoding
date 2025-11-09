@@ -77,6 +77,40 @@ class StoryApi {
 
     return response.json();
   }
+
+  static async subscribeNotification(subscription) {
+    const token = localStorage.getItem('authToken');
+    const response = await fetch(`${BASE_URL}/notifications/subscribe`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(subscription),
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to subscribe');
+    }
+    return response.json();
+  }
+
+  static async unsubscribeNotification(endpoint) {
+    const token = localStorage.getItem('authToken');
+    const response = await fetch(`${BASE_URL}/notifications/subscribe`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ endpoint }),
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to unsubscribe');
+    }
+    return response.json();
+  }
 }
 
 export default StoryApi;
